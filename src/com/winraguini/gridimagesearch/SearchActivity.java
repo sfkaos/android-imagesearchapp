@@ -52,6 +52,18 @@ public class SearchActivity extends Activity {
 				startActivity(i);
 			}
 		});
+		
+		gvResults.setOnScrollListener(new EndlessScrollListener() {
+	        @Override
+	        public void onLoadMore(int page, int totalItemsCount) {
+	                // Triggered only when new data needs to be appended to the list
+	                // Add whatever code is needed to append new items to your AdapterView
+	            customLoadMoreDataFromApi(totalItemsCount);  
+	            Log.d("DEBUG", "totalItemsCount " + totalItemsCount);
+	        }
+	     });
+		
+		
 	}
 
 	@Override
@@ -68,27 +80,16 @@ public class SearchActivity extends Activity {
 	}  
 	
 	public void onImageSearch(View v) {
-		String query = etQuery.getText().toString();
-		Toast.makeText(this, "Searching for " + query, Toast.LENGTH_SHORT).show();
-		//https://ajax.googleapis.com/ajax/services/search/images?q=Android&v=1.0
-		AsyncHttpClient client = new AsyncHttpClient();		
-		Log.d("DEBUG", this.queryUrl.getUrl());
-		this.queryUrl.setStart(0);
-		this.queryUrl.setQuery(query);
-		client.get(this.queryUrl.getUrl(), 
-				new JsonHttpResponseHandler() {
-			public void onSuccess(JSONObject response) {
-				JSONArray imageJsonResults = null;
-				try { 
-					imageJsonResults = response.getJSONObject("responseData").getJSONArray("results");
-					imageResults.clear();
-					imageAdapter.addAll(ImageResult.fromJSONArray(imageJsonResults));
-					Log.d("DEBUG", imageResults.toString());
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		String query = etQuery.getText().toString();		
+		if (!query.isEmpty()) {
+			imageResults.clear();
+			Toast.makeText(this, "Searching for " + query, Toast.LENGTH_SHORT).show();									
+			this.queryUrl.setQuery(query);
+			this.customLoadMoreDataFromApi(0);
+		} else {
+			Toast.makeText(this, "Please enter a query string", Toast.LENGTH_SHORT).show();
+		}
+
 	}
 	
 	public void onSettingsAction(MenuItem mi) {
@@ -99,7 +100,7 @@ public class SearchActivity extends Activity {
 	}
 	
 	private void applyFilter() {
-		
+		this.queryUrl.setFilter(currentFilter);
 	}
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -108,6 +109,27 @@ public class SearchActivity extends Activity {
 			  currentFilter = (ImageFilter) data.getSerializableExtra(ImageFilter.FILTER_KEY);
 			  this.applyFilter();
 		  }
+	}
+	
+	public void customLoadMoreDataFromApi(int offset) {
+	      // This method probably sends out a network request and appends new data items to your adapter. 
+	      // Use the offset value and add it as a parameter to your API request to retrieve paginated data.
+	      // Deserialize API response and then construct new objects to append to the adapter
+		AsyncHttpClient client = new AsyncHttpClient();	
+		this.queryUrl.setStart(offset);
+		client.get(this.queryUrl.getUrl(), 
+				new JsonHttpResponseHandler() {
+			public void onSuccess(JSONObject response) {
+				JSONArray imageJsonResults = null;
+				try { 
+					imageJsonResults = response.getJSONObject("responseData").getJSONArray("results");
+					imageAdapter.addAll(ImageResult.fromJSONArray(imageJsonResults));
+					//Log.d("DEBUG", imageResults.toString());
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 	
 	

@@ -18,9 +18,9 @@ public class ImageQuery {
     }
 	
 	public void setFilter(ImageFilter filter) {
-		this.colorParam = filter.getImgColor();
-		this.sizeParam = filter.getImgSize();
-		this.typeParam = filter.getImgType();
+		this.colorParam = filter.getImgColorValue();
+		this.sizeParam = filter.getImgSizeValue();
+		this.typeParam = filter.getImgTypeValue();
 		this.siteParam = filter.getImgSite();
 	}
 	
@@ -40,16 +40,16 @@ public class ImageQuery {
 			urlBuffer.append("&q=" + Uri.encode(this.queryParam));			
 		}
 		if (this.colorParam != null) {
-			
+			urlBuffer.append("&imgcolor=" + this.colorParam);
 		}
 		if (this.sizeParam != null) {
-			
+			urlBuffer.append("&imgsz=" + this.sizeParam);
 		}		
 		if (this.typeParam != null) {
-			
+			urlBuffer.append("&imgtype=" + this.typeParam);
 		}
 		if (this.siteParam != null) {
-			
+			urlBuffer.append("&as_sitesearch=" + this.siteParam);
 		}		
 		return urlBuffer.toString();
 	}

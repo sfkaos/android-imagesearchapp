@@ -124,6 +124,19 @@ public class ImageFilter implements Serializable {
 		return imgType;
 	}
 	
+	
+	public String getImgSizeValue() {
+		return sizeMap.get(imgSize);
+	}
+	
+	public String getImgColorValue() {
+		return colorMap.get(imgColor);
+	}
+	
+	public String getImgTypeValue() {
+		return typeMap.get(imgType);
+	}
+	
 	public String getImgSite() {
 		return imgSite;
 	}
