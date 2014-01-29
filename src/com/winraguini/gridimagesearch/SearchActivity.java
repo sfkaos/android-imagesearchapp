@@ -21,7 +21,6 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Toast;
 
-
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -31,10 +30,14 @@ public class SearchActivity extends Activity {
 	Button btnSearch;
 	ArrayList<ImageResult> imageResults = new ArrayList<ImageResult>();
 	ImageResultArrayAdapter imageAdapter;
+	ImageFilter currentFilter;
+	String imageQueryString;
+	ImageQuery queryUrl;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
+		this.queryUrl = new ImageQuery("https://ajax.googleapis.com/ajax/services/search/images?rsz=8&v=1.0");
 		setupViews();
 		imageAdapter = new ImageResultArrayAdapter(this, imageResults);
 		gvResults.setAdapter(imageAdapter);
@@ -68,8 +71,11 @@ public class SearchActivity extends Activity {
 		String query = etQuery.getText().toString();
 		Toast.makeText(this, "Searching for " + query, Toast.LENGTH_SHORT).show();
 		//https://ajax.googleapis.com/ajax/services/search/images?q=Android&v=1.0
-		AsyncHttpClient client = new AsyncHttpClient();
-		client.get("https://ajax.googleapis.com/ajax/services/search/images?rsz=8&" + "start=" + 0 + "&v=1.0&q=" + Uri.encode(query), 
+		AsyncHttpClient client = new AsyncHttpClient();		
+		Log.d("DEBUG", this.queryUrl.getUrl());
+		this.queryUrl.setStart(0);
+		this.queryUrl.setQuery(query);
+		client.get(this.queryUrl.getUrl(), 
 				new JsonHttpResponseHandler() {
 			public void onSuccess(JSONObject response) {
 				JSONArray imageJsonResults = null;
@@ -86,14 +92,24 @@ public class SearchActivity extends Activity {
 	}
 	
 	public void onSettingsAction(MenuItem mi) {
-		// handle click here
-		Toast.makeText(this, "Clicked!", Toast.LENGTH_SHORT).show();
-		Intent i = new Intent(this, SettingsActivity.class);		
-		startActivityForResult(i, 1);
-		//i.putExtra(FOO_KEY, "Hello");
-//		i.putExtra(BAR_KEY, "World");
+		// handle click here		
+		Intent i = new Intent(this, SettingsActivity.class);
+		i.putExtra(ImageFilter.FILTER_KEY, currentFilter);
+		startActivityForResult(i, 1);				
+	}
+	
+	private void applyFilter() {
 		
 	}
+	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		  // REQUEST_CODE is defined above
+		  if (resultCode == RESULT_OK && requestCode == 1) {
+			  currentFilter = (ImageFilter) data.getSerializableExtra(ImageFilter.FILTER_KEY);
+			  this.applyFilter();
+		  }
+	}
+	
 	
 
 }

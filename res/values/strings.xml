@@ -12,5 +12,6 @@
     <string name="color_filter_label">Color:</string>
     <string name="type_filter_label">Type:</string>
     <string name="site_filter_label">Site:</string>
+    <string name="save_filter_btn_label">Update</string>
 
 </resources>

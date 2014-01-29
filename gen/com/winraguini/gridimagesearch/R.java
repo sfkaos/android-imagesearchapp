@@ -31,18 +31,18 @@ public final class R {
     }
     public static final class id {
         public static final int action_settings=0x7f09000e;
+        public static final int btnSave=0x7f09000d;
         public static final int btnSearch=0x7f090002;
-        public static final int button1=0x7f09000d;
-        public static final int editText1=0x7f09000b;
         public static final int etQuery=0x7f090001;
+        public static final int etSite=0x7f09000b;
         public static final int gvResults=0x7f090003;
         public static final int ivResult=0x7f090000;
         public static final int spColor=0x7f090007;
         public static final int spSize=0x7f090005;
         public static final int spType=0x7f090009;
-        public static final int textView1=0x7f09000c;
         public static final int tvColor=0x7f090008;
         public static final int tvFilters=0x7f090004;
+        public static final int tvSite=0x7f09000c;
         public static final int tvSize=0x7f090006;
         public static final int tvType=0x7f09000a;
     }
@@ -64,6 +64,7 @@ public final class R {
         public static final int filters_label=0x7f060006;
         public static final int hello_world=0x7f060002;
         public static final int query_hint=0x7f060003;
+        public static final int save_filter_btn_label=0x7f06000b;
         public static final int site_filter_label=0x7f06000a;
         public static final int size_filter_label=0x7f060007;
         public static final int title_activity_image_display=0x7f060004;
